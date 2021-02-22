@@ -1,0 +1,11 @@
+H
+5
+hell0 add 5
+print hell0
+22 add 6
+print 22
+quit!
+A add 10
+A subtracct 2
+A add value
+print A
