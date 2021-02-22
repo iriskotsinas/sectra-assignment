@@ -2,6 +2,10 @@
 //  Created by Iris Kotsinas on 2021-02-20.
 //
 
+/*
+ Register - Class definitions
+ */
+
 #include <stdio.h>
 #include "Register.h"
 
@@ -22,18 +26,6 @@ int Register::getRegisterValue() {
     return registerValue;
 }
 
-void Register::operator+=(int& value) {
-    registerValue = registerValue + value;
-}
-
-void Register::operator-=(int& value) {
-    registerValue = registerValue - value;
-}
-
-void Register::operator*=(int& value) {
-    registerValue = registerValue * value;
-}
-
 void Register::queueExpression(string operation, string value) {
     // Queue the expression
     operations.push_back(make_pair(operation, value));
@@ -41,7 +33,7 @@ void Register::queueExpression(string operation, string value) {
 
 void Register::print(list<Register> input) {
     // Print the result
-    cout << calculate(input) << endl;
+    cout << calculate(input, 0) << endl;
     // Clear all registers
     clearQueue();
 }
@@ -61,7 +53,7 @@ int Register::evaluate(string operation, int value) {
     return registerValue;
 }
 
-int Register::calculate(list<Register> registers) {
+int Register::calculate(list<Register> registers, int counter) {
     string theOperator;
     string theValue;
     bool isDigit;
@@ -81,9 +73,15 @@ int Register::calculate(list<Register> registers) {
             for (list<Register>::iterator i = registers.begin(); i != registers.end(); ++i) {
                 // Check if register name is the same as the value
                 if (i->getRegisterName() == theValue) {
-                    // Perform the operation with lazy evaluation recursively
-                    evaluate(theOperator, i->calculate(registers));
+                    counter++;
                     registerExists = true;
+                    // Check if there is cyclic dependency with the registers
+                    if (counter == registers.size() ) {
+                        cout << "Error cyclic dependency detected" << endl;
+                    } else {
+                        // Perform the operation with lazy evaluation recursively
+                        evaluate(theOperator, i->calculate(registers, counter));
+                    }
                 }
             }
             if (registerExists == false) {
@@ -93,5 +91,3 @@ int Register::calculate(list<Register> registers) {
     }
     return registerValue;
 }
-
-

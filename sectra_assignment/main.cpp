@@ -1,19 +1,22 @@
 //
 //  Created by Iris Kotsinas on 2021-02-20.
 //
-/*
+/* ------------------------------------------------------
  
  SECTRA ASSIGNMENT
  
  This is a program for a simple calculator that can
  add, subtract and multiply values in a set of registers
  
+ The input is read from a simple text file,
+ where each line is one command
+ 
  The syntax for your input is:
  <register> <operation> <value>
  print <register>
  quit
  
- */
+ ------------------------------------------------------ */
 
 #include <iostream>
 #include <vector>
@@ -73,43 +76,45 @@ int main(int argc, char* argv[]) {
             // Put input string in stream
             istringstream iss(line);
             // Populate vector with "words"
-            vector<string> words(istream_iterator<string>(iss),istream_iterator<string>{});
-            // Check if first word (register) is all digits
-            bool isAllDigits = std::all_of(words.at(0).begin(), words.at(0).end(), ::isdigit); // C++11
-    
+            vector<string> words(istream_iterator<string>(iss), istream_iterator<string>{});
+                
             // Check if command is an expression
             if (words.size() == 3) {
                 registerExists = false;
+                // Check if first word (register) is all digits
+                bool isAllDigits = std::all_of(words.at(0).begin(), words.at(0).end(), ::isdigit); // C++11
                 
                 if (isAllDigits) {
                     cout << "Error '" + words.at(0) + "' is not a valid register name" << endl;
-                }
-                
-                if (words.at(1) == "add" || words.at(1) == "subtract" || words.at(1) == "multiply") {
-
-                    // Iterate over list of registers
-                    for (list<Register>::iterator i = registers.begin(); i != registers.end(); ++i) {
-                        // If register name is found, queue the expression
-                        if (i->getRegisterName() == words.at(0)) {
-                            registerExists = true;
-                            (*i).queueExpression(words.at(1), words.at(2));
-                        }
-                    }
-                    
-                    if (!registerExists) {
-                        // Create new register with start value 0 and queue it
-                        Register newReg(words.at(0), 0);
-                        newReg.queueExpression(words.at(1), words.at(2));
-                        //  Add new register to list of registers
-                        registers.push_back(newReg);
-                    }
-                    
                 } else {
-                    cout << "Error '" + words.at(1) + "' is not a valid operator" << endl;
+                    if (words.at(1) == "add" || words.at(1) == "subtract" || words.at(1) == "multiply") {
+
+                        // Iterate over list of registers
+                        for (list<Register>::iterator i = registers.begin(); i != registers.end(); ++i) {
+                            // If register name is found, queue the expression
+                            if (i->getRegisterName() == words.at(0)) {
+                                registerExists = true;
+                                (*i).queueExpression(words.at(1), words.at(2));
+                            }
+                        }
+                        
+                        if (!registerExists) {
+                            // Create new register with start value 0 and queue it
+                            Register newReg(words.at(0), 0);
+                            newReg.queueExpression(words.at(1), words.at(2));
+                            //  Add new register to list of registers
+                            registers.push_back(newReg);
+                        }
+                        
+                    } else {
+                        cout << "Error '" + words.at(1) + "' is not a valid operator" << endl;
+                    }
                 }
+            // Check if input is empty
+            } else if (words.size() == 0) {
+                cout << "Error the input can not be empty" << endl;
                 
             } else {
-
                 if (words.at(0) == "quit") {
                     cout << endl << "Exiting calculator" << endl;
                     return 0;

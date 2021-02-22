@@ -2,6 +2,10 @@
 //  Created by Iris Kotsinas on 2021-02-20.
 //
 
+/*
+ Register - Class declarations
+ */
+
 #ifndef Register_h
 #define Register_h
 #include <iostream>
@@ -23,20 +27,15 @@ public:
     // Getters
     string getRegisterName();
     int getRegisterValue();
-        
-    // Operators
-    void operator+=(int &value);
-    void operator-=(int &value);
-    void operator*=(int &value);
     
     void queueExpression(string operation, string value);
     
     void print(list<Register> input);
     
-    int calculate(list<Register> registers);
+    int calculate(list<Register> registers, int counter);
     
     int evaluate(string operation, int value);
-    
+        
     void clearQueue();
 
 private:
