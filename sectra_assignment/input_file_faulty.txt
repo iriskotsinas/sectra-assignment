@@ -5,7 +5,7 @@ print hell0
 22 add 6
 print 22
 quit!
-A add 10
+A add 2
 A subtracct 2
 A add value
 print A
